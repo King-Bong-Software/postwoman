@@ -1,0 +1,47 @@
+# Changelog
+
+All notable changes to PostWoman are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [1.0.0] - 2026-01-15
+
+### Added
+
+#### Core Features
+- **REST API Testing** - Full support for GET, POST, PUT, PATCH, DELETE HTTP methods
+- **Request Editor** - Configure URL, headers, query parameters, request body, and authentication
+- **Response Viewer** - View response status, headers, and formatted JSON body with syntax highlighting
+- **Request History** - Automatic logging of all requests with date grouping and restore capability
+
+#### Organization
+- **Folder Collections** - Organize requests into folder collections
+- **Notes App Style Sidebar** - Clean, intuitive sidebar with folders in primary column
+- **Folder Selection** - Visual highlight for selected folders with automatic request placement
+- **Auto-expand Folders** - Folders automatically expand when creating requests inside them
+
+#### Authentication
+- **Bearer Token** - JWT and OAuth token support
+- **Basic Auth** - Username and password with Base64 encoding
+
+#### Code Generation
+- **cURL Export** - Generate command-line ready cURL commands
+- **Swift Export** - Generate URLSession implementation code
+- **Python Export** - Generate Python requests library code
+- **Terminal-like UI** - Code generator with terminal-inspired appearance
+
+#### Import/Export
+- **Collection Export** - Export folder collections to JSON files
+- **Collection Import** - Import folder collections from JSON files
+
+#### User Interface
+- **Three-column Layout** - NavigationSplitView with sidebar, content, and detail columns
+- **Keyboard Shortcuts** - Full keyboard support (⌘N, ⇧⌘N, ⌘↩, ⌘S, ⌘D, ⇧⌘G)
+- **Clean Design** - White backgrounds for folder and history views
+- **300px Sidebar** - Optimized initial sidebar width
+
+### Technical
+- Built with SwiftUI 5.0 and SwiftData
+- Actor-based HTTPClient using URLSession with async/await
+- macOS 14.0 (Sonoma) minimum requirement
+- Swift 5.9+
