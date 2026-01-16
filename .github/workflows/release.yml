@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    name: Build and Release
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build Release
+        run: |
+          xcodebuild -project PostWoman.xcodeproj \
+            -scheme PostWoman \
+            -configuration Release \
+            -derivedDataPath build \
+            -destination 'platform=macOS' \
+            build
+
+      - name: Create DMG
+        run: |
+          # Find the built app
+          APP_PATH=$(find build -name "PostWoman.app" -type d | head -1)
+          echo "Found app at: $APP_PATH"
+
+          # Create a temporary directory for DMG contents
+          mkdir -p dmg_contents
+          cp -R "$APP_PATH" dmg_contents/
+
+          # Create Applications symlink for drag-and-drop install
+          ln -s /Applications dmg_contents/Applications
+
+          # Create the DMG
+          hdiutil create -volname "PostWoman" \
+            -srcfolder dmg_contents \
+            -ov -format UDZO \
+            "PostWoman-${{ github.ref_name }}.dmg"
+
+      - name: Get release notes
+        id: release_notes
+        run: |
+          # Extract version from tag
+          VERSION="${{ github.ref_name }}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: PostWoman-${{ github.ref_name }}.dmg
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

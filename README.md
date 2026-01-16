@@ -1,10 +1,11 @@
-# PostWoman 💅
+# PostWoman
 
 A native macOS REST API client built with SwiftUI and SwiftData. A lightweight Postman alternative designed specifically for macOS.
 
 ![macOS](https://img.shields.io/badge/macOS-14.0+-blue)
 ![Swift](https://img.shields.io/badge/Swift-5.9+-orange)
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-5.0+-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## Features
 
@@ -30,12 +31,24 @@ Export requests as code in multiple languages:
 - View past requests grouped by date
 - Restore requests from history
 
-## Requirements
+## Installation
 
+### Download (Recommended)
+
+Download the latest DMG installer from the [Releases](../../releases) page:
+
+1. Download `PostWoman-vX.X.X.dmg`
+2. Open the DMG file
+3. Drag PostWoman to your Applications folder
+4. Eject the DMG and launch PostWoman from Applications
+
+### Build from Source
+
+#### Requirements
 - macOS 14.0 (Sonoma) or later
 - Xcode 15.0 or later
 
-## Installation
+#### Steps
 
 1. Clone the repository:
    ```bash
@@ -48,7 +61,21 @@ Export requests as code in multiple languages:
    open PostWoman.xcodeproj
    ```
 
-3. Build and run (⌘R)
+3. Build and run (Cmd+R)
+
+#### Build DMG Installer
+
+To create a distributable DMG:
+
+```bash
+./scripts/build-dmg.sh
+```
+
+Options:
+- `-v, --version VERSION` - Set version string
+- `-d, --debug` - Build debug configuration
+
+The DMG will be created in the `dist/` directory.
 
 ## Usage
 
@@ -57,18 +84,18 @@ Export requests as code in multiple languages:
 2. Select "New Request" or "New Folder"
 3. Enter the URL and select HTTP method
 4. Configure headers, parameters, body as needed
-5. Press **⌘↩** or click "Send"
+5. Press **Cmd+Return** or click "Send"
 
 ### Keyboard Shortcuts
 
 | Action | Shortcut |
 |--------|----------|
-| New Request | ⌘N |
-| New Folder | ⇧⌘N |
-| Send Request | ⌘↩ |
-| Save Request | ⌘S |
-| Duplicate Request | ⌘D |
-| Generate Code | ⇧⌘G |
+| New Request | Cmd+N |
+| New Folder | Shift+Cmd+N |
+| Send Request | Cmd+Return |
+| Save Request | Cmd+S |
+| Duplicate Request | Cmd+D |
+| Generate Code | Shift+Cmd+G |
 
 ## Project Structure
 
@@ -97,7 +124,28 @@ PostWoman/
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+
+- Setting up your development environment
+- Our coding standards and conventions
+- The pull request process
+
+### Quick Start for Contributors
+
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/postwoman.git
+cd postwoman
+
+# Create a feature branch
+git checkout -b feature/your-feature
+
+# Make changes, then submit a PR
+```
+
+### Good First Issues
+
+Check out issues labeled [`good first issue`](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) for beginner-friendly tasks.
 
 ## License
 
@@ -106,4 +154,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - Inspired by [Postman](https://www.postman.com/)
-- Built with assistance from Claude (Anthropic)
+- Built with SwiftUI and SwiftData
