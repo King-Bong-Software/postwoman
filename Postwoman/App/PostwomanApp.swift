@@ -52,6 +52,13 @@ struct PostWomanApp: App {
         Settings {
             SettingsView()
         }
+
+        Window("About PostWoman", id: "about") {
+            AboutView()
+        }
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
+        .defaultPosition(.center)
     }
 }
 
@@ -89,5 +96,43 @@ struct GeneralSettingsView: View {
             }
         }
         .padding()
+    }
+}
+
+/// Custom About view displaying app information with clickable license link.
+struct AboutView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    private let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.9"
+    private let licenseURL = URL(string: "https://github.com/King-Bong-Software/postwoman/blob/master/LICENSE")!
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .frame(width: 128, height: 128)
+
+            Text("PostWoman 💅")
+                .font(.title)
+                .fontWeight(.bold)
+
+            Text("Version \(appVersion)")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            Text("Made with ❤️ by King Bong Software")
+                .font(.body)
+
+            Link("View License on GitHub", destination: licenseURL)
+                .font(.body)
+
+            Button("Close") {
+                dismiss()
+            }
+            .keyboardShortcut(.defaultAction)
+            .padding(.top, 8)
+        }
+        .padding(32)
+        .frame(width: 320)
     }
 }
