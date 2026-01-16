@@ -1,14 +1,23 @@
 import SwiftUI
 import SwiftData
 
+/// View displaying a chronological list of executed API requests.
+/// Shows request history grouped by date (Today, Yesterday, or specific dates).
+/// Supports searching by URL or HTTP method and provides request restoration.
 struct HistoryListView: View {
+    /// Access to the SwiftData model context for database operations.
     @Environment(\.modelContext) private var modelContext
+
+    /// Query for all request history entries, sorted by timestamp descending.
     @Query(sort: \RequestHistory.timestamp, order: .reverse) private var history: [RequestHistory]
 
+    /// The currently selected request in the main editor, bound for restoration.
     @Binding var selectedRequest: APIRequest?
 
+    /// The current search text for filtering history entries.
     @State private var searchText: String = ""
 
+    /// History entries grouped by date categories (Today, Yesterday, or specific dates).
     private var groupedHistory: [(String, [RequestHistory])] {
         let calendar = Calendar.current
         let grouped = Dictionary(grouping: filteredHistory) { item -> String in
@@ -25,6 +34,7 @@ struct HistoryListView: View {
         return grouped.sorted { $0.value.first?.timestamp ?? Date() > $1.value.first?.timestamp ?? Date() }
     }
 
+    /// History entries filtered by search text, if any search is active.
     private var filteredHistory: [RequestHistory] {
         if searchText.isEmpty {
             return history
@@ -35,6 +45,7 @@ struct HistoryListView: View {
         }
     }
 
+    /// The main view body displaying grouped, searchable history list with toolbar actions.
     var body: some View {
         List {
             ForEach(groupedHistory, id: \.0) { date, items in
@@ -80,6 +91,10 @@ struct HistoryListView: View {
         }
     }
 
+    /// Creates a new request from a history entry and selects it for editing.
+    /// Restores the URL, method, headers, and request body from the history record.
+    ///
+    /// - Parameter historyItem: The history entry to restore as a new request
     private func restoreRequest(from historyItem: RequestHistory) {
         let request = APIRequest(
             name: "Restored: \(historyItem.url)",
@@ -95,10 +110,14 @@ struct HistoryListView: View {
         selectedRequest = request
     }
 
+    /// Deletes a single history entry from the database.
+    ///
+    /// - Parameter item: The history item to delete
     private func deleteHistoryItem(_ item: RequestHistory) {
         modelContext.delete(item)
     }
 
+    /// Deletes all history entries from the database.
     private func clearHistory() {
         for item in history {
             modelContext.delete(item)
@@ -106,9 +125,13 @@ struct HistoryListView: View {
     }
 }
 
+/// Individual row view for displaying a history entry in the sidebar.
+/// Shows method, status code, timestamp, and URL in a compact format.
 struct HistoryRowView: View {
+    /// The history entry to display in this row.
     let item: RequestHistory
 
+    /// The main view body displaying method, status, time, and URL.
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
@@ -142,6 +165,11 @@ struct HistoryRowView: View {
         .padding(.vertical, 2)
     }
 
+    /// Returns the appropriate color for an HTTP status code.
+    /// Green for success (200-299), orange for redirects (300-399), red for errors (400+).
+    ///
+    /// - Parameter code: The HTTP status code
+    /// - Returns: Color representing the status code category
     private func statusColor(for code: Int) -> Color {
         switch code {
         case 200..<300: return .green

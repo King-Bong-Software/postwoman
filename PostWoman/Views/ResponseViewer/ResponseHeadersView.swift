@@ -1,10 +1,16 @@
 import SwiftUI
 
+/// View for displaying HTTP response headers in a searchable, formatted list.
+/// Shows headers as key-value pairs with copy functionality and search capability.
+/// Headers are sorted alphabetically and can be filtered by search text.
 struct ResponseHeadersView: View {
+    /// The list of response headers to display.
     let headers: [KeyValuePair]
 
+    /// The current search text for filtering headers.
     @State private var searchText: String = ""
 
+    /// The filtered and sorted list of headers based on search criteria.
     private var filteredHeaders: [KeyValuePair] {
         if searchText.isEmpty {
             return headers.sorted { $0.key.lowercased() < $1.key.lowercased() }
@@ -15,6 +21,7 @@ struct ResponseHeadersView: View {
         }.sorted { $0.key.lowercased() < $1.key.lowercased() }
     }
 
+    /// The main view body displaying searchable header list with copy functionality.
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -58,6 +65,7 @@ struct ResponseHeadersView: View {
         }
     }
 
+    /// Copies all headers to the system clipboard in a formatted, multi-line string.
     private func copyAllHeaders() {
         let headerString = headers
             .sorted { $0.key.lowercased() < $1.key.lowercased() }
@@ -69,9 +77,13 @@ struct ResponseHeadersView: View {
     }
 }
 
+/// Individual row view for displaying a single HTTP header.
+/// Shows header name and value in a formatted layout with copy functionality on hover.
 struct HeaderRowView: View {
+    /// The header to display in this row.
     let header: KeyValuePair
 
+    /// Whether the mouse is currently hovering over this row.
     @State private var isHovering = false
 
     var body: some View {

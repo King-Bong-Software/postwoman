@@ -1,8 +1,13 @@
 import SwiftUI
 
+/// Row view for displaying an API request in the sidebar.
+/// Shows the HTTP method with color coding and the request name.
+/// Used in both folder request lists and history views.
 struct RequestRowView: View {
+    /// The API request to display in this row.
     let request: APIRequest
 
+    /// The main view body displaying method badge and request name.
     var body: some View {
         HStack(spacing: 8) {
             Text(request.method.rawValue)

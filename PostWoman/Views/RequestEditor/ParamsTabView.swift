@@ -1,8 +1,13 @@
 import SwiftUI
 
+/// View for editing query parameters (URL parameters) of an HTTP request.
+/// Displays a list of key-value pairs that are appended to the request URL.
+/// Supports adding, removing, enabling/disabling, and reordering parameters.
 struct ParamsTabView: View {
+    /// The list of query parameters, bound to the parent view for real-time updates.
     @Binding var params: [KeyValuePair]
 
+    /// The main view body displaying parameter header and key-value editor.
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {

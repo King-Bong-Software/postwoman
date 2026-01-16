@@ -1,13 +1,23 @@
 import SwiftUI
 
+/// Modal sheet for generating code snippets from API requests.
+/// Supports multiple programming languages (cURL, Swift, Python) with
+/// a terminal-style interface for displaying generated code.
+/// Provides copy-to-clipboard functionality and language switching.
 struct CodeGeneratorView: View {
+    /// The API request to generate code for.
     let request: APIRequest
 
+    /// Environment value for dismissing the modal sheet.
     @Environment(\.dismiss) private var dismiss
 
+    /// The currently selected programming language for code generation.
     @State private var selectedLanguage: CodeLanguage = .curl
+
+    /// The generated code string for the selected language.
     @State private var generatedCode: String = ""
 
+    /// Enumeration representing supported code generation languages.
     enum CodeLanguage: String, CaseIterable, Identifiable {
         case curl = "cURL"
         case swift = "Swift"
@@ -15,6 +25,7 @@ struct CodeGeneratorView: View {
 
         var id: String { rawValue }
 
+        /// SF Symbol name for the icon representing this language.
         var icon: String {
             switch self {
             case .curl: return "terminal"
@@ -24,6 +35,7 @@ struct CodeGeneratorView: View {
         }
     }
 
+    /// The main view body displaying header, language picker, and code display.
     var body: some View {
         VStack(spacing: 0) {
             header
@@ -47,6 +59,7 @@ struct CodeGeneratorView: View {
         }
     }
 
+    /// Header section with title, description, and close button.
     private var header: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
@@ -66,6 +79,8 @@ struct CodeGeneratorView: View {
         }
     }
 
+    /// Horizontal picker for selecting the programming language.
+    /// Displays language buttons with icons and copy button.
     private var languagePicker: some View {
         HStack(spacing: 12) {
             ForEach(CodeLanguage.allCases) { language in
@@ -96,6 +111,8 @@ struct CodeGeneratorView: View {
         }
     }
 
+    /// Terminal-style code display area with syntax highlighting.
+    /// Includes terminal window chrome and scrollable code text.
     private var codeView: some View {
         VStack(spacing: 0) {
             // Terminal Header
@@ -139,6 +156,7 @@ struct CodeGeneratorView: View {
         .padding()
     }
 
+    /// Generates code for the selected language using the appropriate generator.
     private func generateCode() {
         switch selectedLanguage {
         case .curl:
@@ -150,6 +168,7 @@ struct CodeGeneratorView: View {
         }
     }
 
+    /// Copies the generated code to the system clipboard.
     private func copyToClipboard() {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(generatedCode, forType: .string)

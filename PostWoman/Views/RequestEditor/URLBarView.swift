@@ -1,11 +1,22 @@
 import SwiftUI
 
+/// A horizontal bar for configuring the HTTP method, URL, and sending requests.
+/// Provides the primary interface for specifying the target endpoint and initiating requests.
+/// Features method selection with color coding, URL input with monospace font, and a send button.
 struct URLBarView: View {
+    /// The request URL, bound to the parent view for real-time updates.
     @Binding var url: String
+
+    /// The HTTP method for the request, bound to the parent view.
     @Binding var method: HTTPMethod
+
+    /// Whether a request is currently being sent, controls button state.
     let isLoading: Bool
+
+    /// Callback executed when the send button is pressed or Enter is pressed.
     let onSend: () -> Void
 
+    /// The main view body containing method picker, URL field, and send button.
     var body: some View {
         HStack(spacing: 12) {
             Picker("Method", selection: $method) {

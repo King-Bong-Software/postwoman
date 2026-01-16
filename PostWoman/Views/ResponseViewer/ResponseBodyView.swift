@@ -1,17 +1,28 @@
 import SwiftUI
 
+/// View for displaying HTTP response body content with formatting options.
+/// Supports pretty-printing JSON responses and provides raw/plain text views.
+/// Includes copy-to-clipboard functionality and content type display.
 struct ResponseBodyView: View {
+    /// The raw response body content as a string.
     let responseBody: String?
+
+    /// The Content-Type header value from the response.
     let contentType: String?
 
+    /// The current view mode (pretty-formatted or raw text).
     @State private var viewMode: ViewMode = .pretty
+
+    /// The formatted/pretty-printed version of the response body.
     @State private var formattedBody: String = ""
 
+    /// Enumeration representing the different display modes for response body.
     enum ViewMode: String, CaseIterable {
         case pretty = "Pretty"
         case raw = "Raw"
     }
 
+    /// The main view body displaying response body with formatting controls.
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -73,6 +84,8 @@ struct ResponseBodyView: View {
         }
     }
 
+    /// Formats the response body for pretty display.
+    /// Applies JSON formatting for JSON content types, otherwise leaves as-is.
     private func formatBody() {
         guard let body = responseBody else {
             formattedBody = ""
@@ -86,6 +99,7 @@ struct ResponseBodyView: View {
         }
     }
 
+    /// Copies the current view content (pretty or raw) to the system clipboard.
     private func copyToClipboard() {
         let content = viewMode == .pretty ? formattedBody : (responseBody ?? "")
         NSPasteboard.general.clearContents()

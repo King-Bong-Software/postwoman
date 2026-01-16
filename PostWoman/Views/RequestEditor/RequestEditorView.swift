@@ -1,18 +1,36 @@
 import SwiftUI
 import SwiftData
 
+/// The main request editor interface that allows users to configure and execute HTTP requests.
+/// This view provides a comprehensive interface for editing all aspects of an API request
+/// including URL, method, headers, parameters, body, and authentication. It also displays
+/// the response from executed requests in a split-view layout.
 struct RequestEditorView: View {
+    /// Access to the SwiftData model context for database operations.
     @Environment(\.modelContext) private var modelContext
+
+    /// The API request being edited. Changes are automatically bound to the model.
     @Bindable var request: APIRequest
 
+    /// The currently selected tab in the request editor (params, headers, body, auth).
     @State private var selectedTab: RequestTab = .params
+
+    /// The response from the most recently executed request, if any.
     @State private var response: HTTPResponse?
+
+    /// Whether a request is currently being executed.
     @State private var isLoading: Bool = false
+
+    /// Controls the visibility of the code generator sheet.
     @State private var showCodeGenerator: Bool = false
+
+    /// Whether the request name is currently being edited inline.
     @State private var isRenaming: Bool = false
 
+    /// HTTP client instance for executing requests.
     private let httpClient = HTTPClient()
 
+    /// The main view body implementing a vertical split layout with request editor and response viewer.
     var body: some View {
         VSplitView {
             VStack(spacing: 0) {
@@ -73,6 +91,8 @@ struct RequestEditorView: View {
         }
     }
 
+    /// Header section showing the request name and folder information.
+    /// Supports inline renaming via double-click on the request name.
     private var requestHeader: some View {
         HStack {
             if isRenaming {
@@ -104,6 +124,7 @@ struct RequestEditorView: View {
         }
     }
 
+    /// The content view for the currently selected tab (params, headers, body, auth).
     @ViewBuilder
     private var tabContent: some View {
         switch selectedTab {
@@ -118,6 +139,8 @@ struct RequestEditorView: View {
         }
     }
 
+    /// Executes the current request and displays the response.
+    /// Updates the loading state and saves the request to history upon completion.
     private func sendRequest() {
         guard !request.url.isEmpty else { return }
 
@@ -134,11 +157,15 @@ struct RequestEditorView: View {
         }
     }
 
+    /// Saves the current request configuration to the database.
+    /// Updates the modified timestamp.
     private func saveRequest() {
         request.updatedAt = Date()
         try? modelContext.save()
     }
 
+    /// Creates a duplicate of the current request with all configuration copied.
+    /// The duplicate is inserted into the same folder with "(Copy)" appended to the name.
     private func duplicateRequest() {
         let duplicate = APIRequest(
             name: "\(request.name) (Copy)",
@@ -159,6 +186,8 @@ struct RequestEditorView: View {
         modelContext.insert(duplicate)
     }
 
+    /// Saves the executed request and its response to the history for later reference.
+    /// Captures all request details and response metrics for debugging and replay.
     private func saveToHistory() {
         let history = RequestHistory(
             url: request.url,
