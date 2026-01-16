@@ -1,6 +1,10 @@
 import SwiftUI
 
+/// View displayed when no request is selected in the main editor.
+/// Provides guidance to users on how to get started and quick actions
+/// for creating new requests or folders via NotificationCenter.
 struct EmptyStateView: View {
+    /// The main view body displaying empty state message with action buttons.
     var body: some View {
         VStack(spacing: 20) {
             Image(systemName: "arrow.left.arrow.right")

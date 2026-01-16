@@ -1,8 +1,13 @@
 import SwiftUI
 
+/// View for configuring HTTP authentication for API requests.
+/// Supports multiple authentication methods: None, Bearer Token, Basic Auth, and OAuth 2.0.
+/// Dynamically displays appropriate configuration fields based on selected auth type.
 struct AuthTabView: View {
+    /// The API request being configured, bound for real-time updates.
     @Bindable var request: APIRequest
 
+    /// The main view body displaying auth type picker and type-specific configuration.
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -38,6 +43,8 @@ struct AuthTabView: View {
         }
     }
 
+    /// View displayed when no authentication is selected.
+    /// Shows an informative message that the request doesn't require authentication.
     private var noAuthView: some View {
         VStack(spacing: 12) {
             Image(systemName: "lock.open")
@@ -52,6 +59,8 @@ struct AuthTabView: View {
         .padding(.top, 40)
     }
 
+    /// View for configuring Bearer token authentication.
+    /// Allows entering a token with copy-to-clipboard functionality and shows the resulting header format.
     private var bearerAuthView: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Bearer Token")
@@ -83,6 +92,8 @@ struct AuthTabView: View {
         }
     }
 
+    /// View for configuring HTTP Basic authentication.
+    /// Provides fields for username and password with explanation of the encoding process.
     private var basicAuthView: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Basic Authentication")
@@ -119,6 +130,8 @@ struct AuthTabView: View {
         }
     }
 
+    /// View for configuring OAuth 2.0 authentication parameters.
+    /// Displays form fields for OAuth configuration (currently not fully implemented).
     private var oauth2View: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("OAuth 2.0 Configuration")
@@ -165,6 +178,12 @@ struct AuthTabView: View {
         }
     }
 
+    /// Helper function for updating OAuth configuration fields.
+    /// Creates a closure that safely updates individual OAuth config properties,
+    /// creating the config object if it doesn't exist.
+    ///
+    /// - Parameter update: Function that modifies the OAuth config with a new value
+    /// - Returns: A closure that accepts the new string value
     private func updateOAuthConfig(_ update: @escaping (inout OAuthConfig, String) -> Void) -> (String) -> Void {
         return { newValue in
             var config = request.authOAuthConfig ?? OAuthConfig()
@@ -174,9 +193,16 @@ struct AuthTabView: View {
     }
 }
 
+/// A reusable text field component with a label.
+/// Supports both regular and secure (password) text fields for consistent form styling.
 struct LabeledTextField: View {
+    /// The label text displayed above the text field.
     let label: String
+
+    /// The text content of the field, bound to the parent view.
     @Binding var text: String
+
+    /// Whether to use a secure text field (password field) instead of regular text field.
     var isSecure: Bool = false
 
     var body: some View {

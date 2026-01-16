@@ -1,11 +1,22 @@
 import SwiftUI
 
+/// Individual row view for editing a single key-value pair.
+/// Displays enable/disable toggle, key and value text fields, and delete button.
+/// Used for editing HTTP headers, query parameters, and form data.
 struct KeyValueRowView: View {
+    /// The key-value pair to edit, bound for real-time updates.
     @Binding var pair: KeyValuePair
+
+    /// Placeholder text for the key text field.
     var keyPlaceholder: String = "Key"
+
+    /// Placeholder text for the value text field.
     var valuePlaceholder: String = "Value"
+
+    /// Callback executed when the delete button is pressed.
     var onDelete: () -> Void
 
+    /// The main view body displaying toggle, text fields, and delete button.
     var body: some View {
         HStack(spacing: 8) {
             Toggle("", isOn: $pair.isEnabled)
@@ -29,11 +40,20 @@ struct KeyValueRowView: View {
     }
 }
 
+/// Editor view for managing a list of key-value pairs.
+/// Displays multiple KeyValueRowView instances with an "Add" button.
+/// Used throughout the app for editing headers, query parameters, and form data.
 struct KeyValueEditorView: View {
+    /// The list of key-value pairs to edit, bound for real-time updates.
     @Binding var pairs: [KeyValuePair]
+
+    /// Placeholder text for key fields in all rows.
     var keyPlaceholder: String = "Key"
+
+    /// Placeholder text for value fields in all rows.
     var valuePlaceholder: String = "Value"
 
+    /// The main view body displaying all key-value pairs with add button.
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             ForEach($pairs) { $pair in
@@ -57,6 +77,7 @@ struct KeyValueEditorView: View {
         .padding()
     }
 
+    /// Adds a new empty key-value pair to the list.
     private func addNewPair() {
         pairs.append(KeyValuePair(key: "", value: ""))
     }
